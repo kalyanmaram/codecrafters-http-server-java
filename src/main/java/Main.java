@@ -22,7 +22,9 @@ public class Main {
             String randomString = path.substring(6);
             String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + randomString.length()+ "\r\n\r\n" + randomString;
             outputStream.write(response.getBytes());
-          } else {
+          } else if (path.equals("/")){
+            outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+          }else{
             outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
           outputStream.flush(); 
