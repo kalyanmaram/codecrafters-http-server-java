@@ -10,7 +10,11 @@ import java.nio.file.Paths;
 
 public class Main {
   public static void main(String[] args) {
-    String directory = args[0]; // Get the directory from command line arguments
+    String directory = null;
+    if ((args.length == 2) && (args[0].equalsIgnoreCase("--directory"))){
+
+      directory = args[1];
+    }
 
     try (ServerSocket serverSocket = new ServerSocket(4221)) {
       serverSocket.setReuseAddress(true);
