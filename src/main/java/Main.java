@@ -9,12 +9,9 @@ import java.net.Socket;
 public class Main {
   public static void main(String[] args) {
     ServerSocket serverSocket = null; // Create a server socket to listen for client connection.
-    Socket clientSocket = null; // Create a socket to communicate with the client.
     try {
       serverSocket = new ServerSocket(4221);
       serverSocket.setReuseAddress(true);
-      System.out.println("Server is listening on port 4221");
-
       while (true) {
         try (Socket clienSocket = serverSocket.accept()) {
           BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
