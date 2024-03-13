@@ -33,14 +33,27 @@ public class Main {
 
             String userAgent = "";
             String line;
-            while (!(line = reader.readLine()).equals("")) {
-              if (line.startsWith("User-Agent: "))
+            if(requestParts[0].equals("POST") && path.startsWith("/files/")){
+              String fileName = path.substring(7);
+              Path filePath = Paths.get(finalDirectory, fileName);
+
+              StringBuilder body = new StringBuilder();
+              while(reader.ready()){
+                body.append((char)reader.read());
+              }
+              Files.write(filePath,body.toString().getBytes());
+              outputStream.write("HTTP/1.1 201 Created\r\n\r\n".getBytes());
+            } else if(requestParts[0].equals("GET")){
+
+              while (!(line = reader.readLine()).equals("")) {
+                if (line.startsWith("User-Agent: "))
                 userAgent = line.substring(12);
-            }
+              }
 
             if (path.startsWith("/files/")) {
               String fileName = path.substring(7);
               Path filePath = Paths.get(finalDirectory, fileName);
+              
               if (Files.exists(filePath)) {
                 byte[] fileBytes = Files.readAllBytes(filePath);
                 String response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + fileBytes.length + "\r\n\r\n";
@@ -62,6 +75,7 @@ public class Main {
               outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
             }
             outputStream.flush();
+          }
           } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
           } finally {
