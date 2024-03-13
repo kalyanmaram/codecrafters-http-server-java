@@ -33,17 +33,24 @@ public class Main {
 
             String userAgent = "";
             String line;
-            if(requestParts[0].equals("POST") && path.startsWith("/files/")){
+            if (requestParts[0].equals("POST") && path.startsWith("/files/")) {
               String fileName = path.substring(7);
               Path filePath = Paths.get(finalDirectory, fileName);
-
-              StringBuilder body = new StringBuilder();
-              while(reader.ready()){
-                body.append((char)reader.read());
+          
+              int contentLength = 0;
+              while (!(line = reader.readLine()).equals("")) {
+                  if (line.startsWith("Content-Length: ")) {
+                      contentLength = Integer.parseInt(line.substring(16));
+                  }
               }
-              Files.write(filePath,body.toString().getBytes());
+          
+              char[] bodyChars = new char[contentLength];
+              reader.read(bodyChars, 0, contentLength);
+              String body = new String(bodyChars);
+          
+              Files.write(filePath, body.getBytes());
               outputStream.write("HTTP/1.1 201 Created\r\n\r\n".getBytes());
-            } else if(requestParts[0].equals("GET")){
+          } else if(requestParts[0].equals("GET")){
 
               while (!(line = reader.readLine()).equals("")) {
                 if (line.startsWith("User-Agent: "))
