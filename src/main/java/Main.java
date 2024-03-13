@@ -18,12 +18,14 @@ public class Main {
           String[] requestParts = requestLine.split(" ");
           String path = requestParts[1];
 
-          if ("/".equals(path)) {
-            outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+          if (path.startsWith("/echo/")) {
+            String randomString = path.substring(6);
+            String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + randomString.length()+ "\r\n\r\n" + randomString;
+            outputStream.write(response.getBytes());
           } else {
             outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
-          outputStream.flush();
+          outputStream.flush(); 
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
         }
