@@ -9,6 +9,7 @@ public class Main {
   public static void main(String[] args) {
     try (ServerSocket serverSocket = new ServerSocket(4221)) {
       serverSocket.setReuseAddress(true);
+      
       while (true) {
         try (Socket clientSocket = serverSocket.accept()) {
           BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
