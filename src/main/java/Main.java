@@ -21,6 +21,8 @@ public class Main {
 
       while (true) {
         Socket clientSocket = serverSocket.accept();
+        final String finalDirectory = directory;
+
         new Thread(() -> {
           try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                OutputStream outputStream = clientSocket.getOutputStream()) {
@@ -38,7 +40,7 @@ public class Main {
 
             if (path.startsWith("/files/")) {
               String fileName = path.substring(7);
-              Path filePath = Paths.get(directory, fileName);
+              Path filePath = Paths.get(finalDirectory, fileName);
               if (Files.exists(filePath)) {
                 byte[] fileBytes = Files.readAllBytes(filePath);
                 String response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + fileBytes.length + "\r\n\r\n";
